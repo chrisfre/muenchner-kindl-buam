@@ -1,8 +1,12 @@
 package de.isse.alumni.muenchner_kindl_buam.cache.data;
 
+import lombok.Builder;
+import lombok.ToString;
 import lombok.Value;
 
 @Value
+@Builder
+@ToString(of = { "V", "E", "R", "C", "X" })
 public class Input {
 	/** Number of videos */
 	private final int V;
@@ -27,6 +31,13 @@ public class Input {
 
 	/** Video */
 	private final int[] videoSize;
+
+	/** Endpoint */
+	private final int[] dcLinks;
+
+	public int getDcLink(int endpoint) {
+		return dcLinks[endpoint];
+	}
 
 	public int getLatency(int endpoint, int cache) {
 		return latency[endpoint][cache];
