@@ -12,14 +12,14 @@ public class AllocationWriter {
 	public static void write(Allocation a, String fileName) throws IOException {
 		try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(fileName))) {
 			List<Integer> usedCacheServers = a.getUsedCacheServers();
-			bw.write(usedCacheServers.size());
+			bw.write(String.valueOf(usedCacheServers.size()));
 			bw.newLine();
 
 			for (int c : usedCacheServers) {
-				bw.write(c);
+				bw.write(String.valueOf(c));
 				bw.write(" ");
 				for (int v : a.getVideos(c)) {
-					bw.write(v);
+					bw.write(String.valueOf(v));
 					bw.write(" ");
 				}
 				bw.newLine();

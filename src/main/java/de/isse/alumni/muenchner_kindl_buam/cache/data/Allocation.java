@@ -29,8 +29,13 @@ public class Allocation {
 					// a valid request description
 					int dcLatency = input.getDcLink(e);
 					int minLatency = dcLatency;
+					int minC = -1;
 					for (int c = 0; c < input.getC(); c++) {
-						minLatency = Math.min(minLatency, input.getLatency(e, c));
+						int eToCLatency = input.getLatency(e, c);
+						if (allocation[c][v] > 0 && eToCLatency > 0 && minLatency > eToCLatency) {
+							minLatency = eToCLatency;
+							minC = c;
+						}
 					}
 					int diff = dcLatency - minLatency;
 
@@ -79,7 +84,7 @@ public class Allocation {
 		return allocation[cache][video] > 0;
 	}
 
-	public boolean validate() {
+	public boolean isValid() {
 		// from 1 since 0 is data center
 		for (int i = 1; i < input.getC(); i++) {
 			if (getUsedCapacity(i) > input.getX()) {
