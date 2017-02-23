@@ -72,7 +72,7 @@ public class ProblemSetReader {
 			}
 
 			builder.latency(links);
-			// TODO: Set DC links
+			builder.dcLinks(dcLinks);
 
 			final int[][] reqs = new int[E][V];
 			for (int request = 0; request < R; ++request) {

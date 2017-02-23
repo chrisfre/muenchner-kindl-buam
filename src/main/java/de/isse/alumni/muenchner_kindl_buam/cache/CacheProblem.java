@@ -13,7 +13,7 @@ public class CacheProblem {
 	}
 
 	void run() throws Exception {
-		final URI problemFile = getClass().getClassLoader().getResource("datacenters/me_at_the_zoo.in").toURI();
+		final URI problemFile = getClass().getClassLoader().getResource("datacenters/example.in").toURI();
 		final ProblemSetReader reader = new ProblemSetReader(problemFile);
 		final Input input = reader.parseInputFile();
 
