@@ -29,12 +29,10 @@ public class Allocation {
 					// a valid request description
 					int dcLatency = input.getDcLink(e);
 					int minLatency = dcLatency;
-					int minC = -1;
 					for (int c = 0; c < input.getC(); c++) {
 						int eToCLatency = input.getLatency(e, c);
 						if (allocation[c][v] > 0 && eToCLatency > 0 && minLatency > eToCLatency) {
 							minLatency = eToCLatency;
-							minC = c;
 						}
 					}
 					int diff = dcLatency - minLatency;
