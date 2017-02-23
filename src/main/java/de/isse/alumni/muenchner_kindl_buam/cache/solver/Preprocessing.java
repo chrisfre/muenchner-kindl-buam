@@ -14,6 +14,14 @@ public class Preprocessing {
 		return relevantVideos;
 	}
 
+	public boolean isRelevantEndpoint(Integer e) {
+		return relevantEndpoints[e];
+	}
+
+	public boolean isRelevantVideo(Integer v) {
+		return relevantVideos[v];
+	}
+
 	public void process(Input input) {
 		relevantEndpoints = new boolean[input.getE()];
 		relevantVideos = new boolean[input.getV()];
@@ -32,5 +40,4 @@ public class Preprocessing {
 			}
 		}
 	}
-
 }
