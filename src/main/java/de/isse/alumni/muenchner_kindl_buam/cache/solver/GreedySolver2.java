@@ -70,6 +70,18 @@ public class GreedySolver2 implements Solver {
 		Collections.sort(sortedRequests, Comparator.comparing(EVTriple::getCount));
 
 		for (EVTriple req : sortedRequests) {
+			boolean isAlreadyAllocated = false;
+			for (int c = 0; c < input.getC(); c++) {
+				if (result.isAllocated(req.getVideo(), c)) {
+					isAlreadyAllocated = true;
+					continue;
+				}
+			}
+
+			if (isAlreadyAllocated) {
+				continue;
+			}
+
 			for (ECTriple lat : sortedLatencies) {
 				if (req.getEndpoint() == lat.getEndpoint()) {
 					if (result.getUsedCapacity(lat.getCache()) + input.getVideoSize(req.getVideo()) <= input.getX()) {
