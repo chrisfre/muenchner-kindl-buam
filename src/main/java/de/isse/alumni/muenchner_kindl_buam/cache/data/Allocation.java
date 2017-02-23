@@ -10,42 +10,56 @@ public class Allocation {
 	private final int[][] allocation;
 	private Input input;
 
+	private long counts = 0;
+	private long latencies = 0;
+
+	private int[][] endPointVideoDiff;
+
 	public Allocation(Input input) {
 		this.allocation = new int[input.getC()][input.getV()];
 		this.input = input;
-	}
 
-	public void allocateTo(int video, int cache) {
-		allocation[cache][video] = input.getVideoSize(video);
-	}
+		endPointVideoDiff = new int[input.getE()][input.getV()];
 
-	public long getScore() {
-		long latencies = 0;
-		long counts = 0;
 		for (int e = 0; e < input.getE(); e++) {
 			for (int v = 0; v < input.getV(); v++) {
-				int count = input.getRequest(e, v);
-				if (count > 0) {
-					// a valid request description
-					int dcLatency = input.getDcLink(e);
-					int minLatency = dcLatency;
-					for (int c = 0; c < input.getC(); c++) {
-						int eToCLatency = input.getLatency(e, c);
-						if (allocation[c][v] > 0 && eToCLatency > 0 && minLatency > eToCLatency) {
-							minLatency = eToCLatency;
-						}
-					}
-					int diff = dcLatency - minLatency;
-
-					assert diff >= 0;
-
-					latencies += (long) count * (long) diff;
-					counts += count;
-				}
+				counts += input.getRequest(e, v);
+				endPointVideoDiff[e][v] = 0;
 			}
 		}
 
-		return latencies * 1000 / counts;
+	}
+
+	public void allocateTo(int video, int cache) {
+		if (getUsedCapacity(cache) + input.getVideoSize(video) > input.getX()) {
+			throw new IllegalStateException(video + " " + cache);
+		}
+
+		allocation[cache][video] = input.getVideoSize(video);
+
+		for (int e = 0; e < input.getE(); e++) {
+			if (input.getLatency(e, cache) == 0) {
+				continue;
+			}
+			if (input.getRequest(e, video) > 0) {
+				int oldDiff = endPointVideoDiff[e][video];
+				int newDiff = input.getDcLink(e) - input.getLatency(e, cache);
+				int count = input.getRequest(e, video);
+
+				if (oldDiff < newDiff) {
+					latencies = latencies + (newDiff - oldDiff) * (long) count;
+					endPointVideoDiff[e][video] = newDiff;
+				}
+			}
+		}
+	}
+
+	public long getScore() {
+		long result = (latencies * 1000) / counts;
+		System.err.println(result);
+		System.err.println((latencies * 1000l) / counts);
+		System.err.println((latencies * 1000l) / counts);
+		return result;
 	}
 
 	public List<Integer> getUsedCacheServers() {

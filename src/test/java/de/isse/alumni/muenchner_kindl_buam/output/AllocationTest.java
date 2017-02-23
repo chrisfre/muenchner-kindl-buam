@@ -30,7 +30,7 @@ public class AllocationTest {
 
 		AllocationWriter.write(allocation, "example2.out");
 
-		Assert.assertEquals(allocation.getScore(), 462500);
+		Assert.assertEquals(462500, allocation.getScore());
 		Assert.assertTrue(allocation.isValid());
 	}
 

@@ -42,10 +42,6 @@ public class GreedySolver2 implements Solver {
 
 		List<ECTriple> sortedLatencies = new ArrayList<>();
 		for (int e = 0; e < input.getE(); e++) {
-			if (!prep.isRelevantEndpoint(e)) {
-				System.out.println("Skipping irrelevant endpoint: " + e);
-				continue;
-			}
 
 			for (int c = 0; c < input.getC(); c++) {
 				sortedLatencies.add(new ECTriple(e, c, input.getLatency(e, c)));
@@ -55,15 +51,7 @@ public class GreedySolver2 implements Solver {
 
 		List<EVTriple> sortedRequests = new ArrayList<>();
 		for (int e = 0; e < input.getE(); e++) {
-			if (!prep.isRelevantEndpoint(e)) {
-				System.out.println("Skipping irrelevant endpoint: " + e);
-				continue;
-			}
 			for (int v = 0; v < input.getV(); v++) {
-				if (!prep.isRelevantVideo(v)) {
-					System.out.println("Skipping irrelevant video: " + v);
-					continue;
-				}
 				sortedRequests.add(new EVTriple(e, v, input.getRequest(e, v) * input.getDcLink(e)));
 			}
 		}
