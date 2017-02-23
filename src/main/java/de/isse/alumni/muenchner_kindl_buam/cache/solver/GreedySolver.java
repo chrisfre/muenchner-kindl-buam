@@ -1,7 +1,8 @@
 package de.isse.alumni.muenchner_kindl_buam.cache.solver;
 
 import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import de.isse.alumni.muenchner_kindl_buam.cache.data.Allocation;
 import de.isse.alumni.muenchner_kindl_buam.cache.data.Input;
@@ -36,13 +37,16 @@ public class GreedySolver implements Solver {
 
 		};
 
+		System.out.println("Step 0: Preprocessing");
 		prep.process(input);
 
 		///// BUILD PRIORITY QUEUE ACCORDING TO LINK PRODUCTS (largest savings
 		///// per video)
 		final boolean[][] served = new boolean[input.getE()][input.getV()];
-		final PriorityQueue<Criterion> pq = new PriorityQueue<>(comp);
 
+		System.out.println("Step 1: Build criteria");
+		final Criterion[] crits = new Criterion[input.getE() * input.getV() * input.getC()];
+		int count = 0;
 		for (int e = 0; e < input.getE(); ++e) {
 			if (!prep.isRelevantEndpoint(e)) {
 				System.out.println("Skipping irrelevant endpoint: " + e);
@@ -60,16 +64,21 @@ public class GreedySolver implements Solver {
 						continue;
 					}
 
-					final Criterion crit = new Criterion(v, e, c);
-					pq.offer(crit);
+					crits[count] = new Criterion(v, e, c);
+					++count;
 				}
 			}
+		}
+
+		System.out.println("Step 2: Sort criteria");
+		final SortedSet<Criterion> pq = new TreeSet<>(comp);
+		for (int i = 0; i < count; ++i) {
+			pq.add(crits[i]);
 		}
 		/////
 
 		System.out.println("PQ --------------------------------");
-		while (!pq.isEmpty()) {
-			final Criterion crit = pq.poll();
+		for (Criterion crit : pq) {
 			System.out.printf("%s --> %d\n", crit, crit.getWeight(input));
 
 			// Find out if we can put the video on the requested cache
