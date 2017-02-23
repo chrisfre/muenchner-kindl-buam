@@ -29,7 +29,7 @@ public class ProblemSetReader {
 			builder.cols(numCols);
 			builder.ingredientsPerSlice(minIngredient);
 			builder.maxSliceSize(maxArea);
-			
+
 			builder.pizza(new Ingredient[numRows][numCols]);
 
 			final Params result = builder.build();

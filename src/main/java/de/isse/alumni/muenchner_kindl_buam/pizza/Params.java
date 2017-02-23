@@ -21,11 +21,12 @@ public class Params {
 
 enum Ingredient {
 	Tomato, Mushroom;
-	
+
 	public static Ingredient fromChar(char ch) {
 		if (ch == 'T') {
 			return Ingredient.Tomato;
-		} else if (ch == 'M') {
+		}
+		else if (ch == 'M') {
 			return Ingredient.Mushroom;
 		}
 		throw new IllegalArgumentException("Invalid ingredient character: " + ch);

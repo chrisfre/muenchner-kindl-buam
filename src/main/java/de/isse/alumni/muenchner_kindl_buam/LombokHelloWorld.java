@@ -5,6 +5,7 @@ import lombok.Data;
 public @Data class LombokHelloWorld {
 	private String member;
 	private int age;
+
 	public LombokHelloWorld(String member, int age) {
 		super();
 		this.member = member;
