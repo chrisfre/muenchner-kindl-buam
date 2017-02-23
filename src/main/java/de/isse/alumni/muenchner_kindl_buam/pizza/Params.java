@@ -13,8 +13,21 @@ public class Params {
 	private final int ingredientsPerSlice;
 	private final int maxSliceSize;
 	private final Ingredient[][] pizza;
+
+	public void setIngredient(int row, int col, Ingredient i) {
+		pizza[row][col] = i;
+	}
 }
 
 enum Ingredient {
-	Tomato, Mushroom
+	Tomato, Mushroom;
+	
+	public static Ingredient fromChar(char ch) {
+		if (ch == 'T') {
+			return Ingredient.Tomato;
+		} else if (ch == 'M') {
+			return Ingredient.Mushroom;
+		}
+		throw new IllegalArgumentException("Invalid ingredient character: " + ch);
+	}
 };

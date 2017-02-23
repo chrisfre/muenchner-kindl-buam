@@ -14,19 +14,37 @@ public class ProblemSetReader {
 	public ProblemSetReader(URI inputFile) {
 		this.inputFile = Paths.get(inputFile).toFile();
 	}
-	
+
 	public Params parseInputFile() {
 		try (final BufferedReader in = new BufferedReader(new FileReader(inputFile))) {
 			final Params.ParamsBuilder builder = new Params.ParamsBuilder();
 			final String headerLine = in.readLine();
-			
+
 			StringTokenizer tokenizer = new StringTokenizer(headerLine);
-			builder.rows(Integer.parseInt(tokenizer.nextToken()));
-			builder.cols(Integer.parseInt(tokenizer.nextToken()));
-			builder.ingredientsPerSlice(Integer.parseInt(tokenizer.nextToken()));
-			builder.maxSliceSize(Integer.parseInt(tokenizer.nextToken()));
+			final int numRows = Integer.parseInt(tokenizer.nextToken());
+			final int numCols = Integer.parseInt(tokenizer.nextToken());
+			builder.rows(numRows);
+			builder.cols(numCols);
+			builder.ingredientsPerSlice(numRows);
+			builder.maxSliceSize(numRows);
 			
-			return builder.build();
+			builder.pizza(new Ingredient[numRows][numCols]);
+
+			final Params result = builder.build();
+
+			String line;
+			int row = 0;
+			while ((line = in.readLine()) != null) {
+				final int[] chars = line.chars().toArray();
+				int col = 0;
+				for (int ch : chars) {
+					result.setIngredient(row, col, Ingredient.fromChar((char) ch));
+					col++;
+				}
+				row++;
+			}
+
+			return result;
 		}
 		catch (IOException e) {
 			e.printStackTrace();
