@@ -10,7 +10,7 @@ import de.isse.alumni.muenchner_kindl_buam.cache.solver.Solver;
 
 public class CacheProblemAC {
 	public static void main(String[] args) throws Exception {
-		String problem = "videos_worth_spreading";
+		String problem = "me_at_the_zoo";
 		if (args.length > 0) {
 			problem = args[0];
 		}
@@ -29,5 +29,7 @@ public class CacheProblemAC {
 		final Allocation allocation = solver.solve(input);
 		final String resultFileName = String.format("%s_%s.out", problem, solver.getClass().getSimpleName());
 		AllocationWriter.write(allocation, resultFileName);
+
+		System.out.println(allocation.getScore());
 	}
 }

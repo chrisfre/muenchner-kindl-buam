@@ -90,7 +90,17 @@ public class GreedySolver2 implements Solver {
 					}
 				}
 			}
+		}
 
+		for (EVTriple req : sortedRequests) {
+			for (ECTriple lat : sortedLatencies) {
+				if (req.getEndpoint() == lat.getEndpoint()) {
+					if (result.getUsedCapacity(lat.getCache()) + input.getVideoSize(req.getVideo()) <= input.getX()) {
+						result.allocateTo(req.getVideo(), lat.getCache());
+						break;
+					}
+				}
+			}
 		}
 
 		return result;
