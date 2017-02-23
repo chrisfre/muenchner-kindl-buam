@@ -23,10 +23,12 @@ public class ProblemSetReader {
 			StringTokenizer tokenizer = new StringTokenizer(headerLine);
 			final int numRows = Integer.parseInt(tokenizer.nextToken());
 			final int numCols = Integer.parseInt(tokenizer.nextToken());
+			final int minIngredient = Integer.parseInt(tokenizer.nextToken());
+			final int maxArea = Integer.parseInt(tokenizer.nextToken());
 			builder.rows(numRows);
 			builder.cols(numCols);
-			builder.ingredientsPerSlice(numRows);
-			builder.maxSliceSize(numRows);
+			builder.ingredientsPerSlice(minIngredient);
+			builder.maxSliceSize(maxArea);
 			
 			builder.pizza(new Ingredient[numRows][numCols]);
 

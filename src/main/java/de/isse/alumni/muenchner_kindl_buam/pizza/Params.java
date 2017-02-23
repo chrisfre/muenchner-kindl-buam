@@ -6,7 +6,7 @@ import lombok.Value;
 
 @Value
 @Builder
-@ToString
+@ToString(exclude = "pizza")
 public class Params {
 	private final int rows;
 	private final int cols;
