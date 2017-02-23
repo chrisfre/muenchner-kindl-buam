@@ -54,11 +54,39 @@ public class Allocation {
 		}
 	}
 
+	public long getOldScore() {
+		long latencies = 0;
+		long counts = 0;
+		for (int e = 0; e < input.getE(); e++) {
+			for (int v = 0; v < input.getV(); v++) {
+				int count = input.getRequest(e, v);
+				if (count > 0) {
+					// a valid request description
+					int dcLatency = input.getDcLink(e);
+					int minLatency = dcLatency;
+					for (int c = 0; c < input.getC(); c++) {
+						int eToCLatency = input.getLatency(e, c);
+						if (allocation[c][v] > 0 && eToCLatency > 0 && minLatency > eToCLatency) {
+							minLatency = eToCLatency;
+						}
+					}
+					int diff = dcLatency - minLatency;
+
+					assert diff >= 0;
+
+					latencies += (long) count * (long) diff;
+					counts += count;
+				}
+			}
+		}
+
+		return latencies * 1000 / counts;
+	}
+
 	public long getScore() {
 		long result = (latencies * 1000) / counts;
 		System.err.println(result);
-		System.err.println((latencies * 1000l) / counts);
-		System.err.println((latencies * 1000l) / counts);
+		System.err.println(getOldScore());
 		return result;
 	}
 
