@@ -10,7 +10,7 @@ import de.isse.alumni.muenchner_kindl_buam.cache.solver.Solver;
 
 public class CacheProblem {
 	public static void main(String[] args) throws Exception {
-		String problem = "kittens";
+		String problem = "videos_worth_spreading";
 		if (args.length > 0) {
 			problem = args[0];
 		}
