@@ -35,7 +35,7 @@ public class Input {
 	/** Endpoint */
 	private final int[] dcLinks;
 
-	public int getDcLink(int endpoint) {
+	public int getDcLatency(int endpoint) {
 		return dcLinks[endpoint];
 	}
 
@@ -43,7 +43,7 @@ public class Input {
 		return latency[endpoint][cache];
 	}
 
-	public int getRequest(int endpoint, int video) {
+	public int getRequestCount(int endpoint, int video) {
 		return requests[endpoint][video];
 	}
 

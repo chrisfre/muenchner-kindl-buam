@@ -34,7 +34,7 @@ public class Preprocessing {
 			}
 
 			for (int v = 0; v < input.getV(); ++v) {
-				if (input.getRequest(e, v) > 0) {
+				if (input.getRequestCount(e, v) > 0) {
 					relevantVideos[v] = true;
 				}
 			}

@@ -15,7 +15,7 @@ public class GreedySolver implements Solver {
 		private int cache;
 
 		public int getWeight(Input input) {
-			return (input.getDcLink(endpoint) - input.getLatency(endpoint, cache)) * input.getRequest(endpoint, video);
+			return (input.getDcLatency(endpoint) - input.getLatency(endpoint, cache)) * input.getRequestCount(endpoint, video);
 		}
 	}
 
@@ -89,8 +89,8 @@ public class GreedySolver implements Solver {
 				final int endpoint = arrE[i];
 				final int cache = arrC[i];
 
-				return (input.getDcLink(endpoint) - input.getLatency(endpoint, cache))
-						* input.getRequest(endpoint, video);
+				return (input.getDcLatency(endpoint) - input.getLatency(endpoint, cache))
+						* input.getRequestCount(endpoint, video);
 			}
 		};
 

@@ -5,12 +5,12 @@ import java.net.URI;
 import de.isse.alumni.muenchner_kindl_buam.cache.data.Allocation;
 import de.isse.alumni.muenchner_kindl_buam.cache.data.Input;
 import de.isse.alumni.muenchner_kindl_buam.cache.output.AllocationWriter;
-import de.isse.alumni.muenchner_kindl_buam.cache.solver.GreedySolver2;
+import de.isse.alumni.muenchner_kindl_buam.cache.solver.GreedySolver;
 import de.isse.alumni.muenchner_kindl_buam.cache.solver.Solver;
 
 public class CacheProblem {
 	public static void main(String[] args) throws Exception {
-		String problem = "videos_worth_spreading";
+		String problem = "trending_today";
 		if (args.length > 0) {
 			problem = args[0];
 		}
@@ -24,10 +24,12 @@ public class CacheProblem {
 		final URI problemFile = getClass().getClassLoader().getResource("datacenters/" + problem + ".in").toURI();
 		final ProblemSetReader reader = new ProblemSetReader(problemFile);
 		final Input input = reader.parseInputFile();
-		final Solver solver = new GreedySolver2();
+		final Solver solver = new GreedySolver();
 
 		final Allocation allocation = solver.solve(input);
 		final String resultFileName = String.format("%s_%s.out", problem, solver.getClass().getSimpleName());
 		AllocationWriter.write(allocation, resultFileName);
+
+		System.out.println(allocation.getScore());
 	}
 }
