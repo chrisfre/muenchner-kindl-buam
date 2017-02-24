@@ -39,38 +39,58 @@ public class GreedySolverAC implements Solver {
 
 		for (int e = 0; e < input.getE(); e++) {
 
-			List<CacheLatency> latenciesPerEndponint = new ArrayList<>();
+			List<CacheLatency> latenciesPerEndpoint = new ArrayList<>();
+			sortedLatencies.add(latenciesPerEndpoint);
+
+			if (!prep.isRelevantEndpoint(e)) {
+				System.out.println("Skipping irrelevant endpoint: " + e);
+				continue;
+			}
+
 			for (int c = 0; c < input.getC(); c++) {
 
 				// only add if reachable
 				int latency = input.getLatency(e, c);
 				if (latency > 0) {
-					latenciesPerEndponint.add(new CacheLatency(c, latency));
+					latenciesPerEndpoint.add(new CacheLatency(c, latency));
 				}
 			}
-			Collections.sort(latenciesPerEndponint, Comparator.comparing(CacheLatency::getLatency));
-			sortedLatencies.add(latenciesPerEndponint);
+			Collections.sort(latenciesPerEndpoint,
+					Collections.reverseOrder(Comparator.comparing(CacheLatency::getLatency)));
 
 			for (int v = 0; v < input.getV(); v++) {
+				if (!prep.isRelevantVideo(v)) {
+					System.out.println("Skipping irrelevant video: " + v);
+					continue;
+				}
+
 				// only add if requested
 				int requestCount = input.getRequestCount(e, v);
 				if (requestCount > 0) {
-					sortedRequests.add(new RequestScoring(e, v, requestCount * input.getDcLatency(e)));
+					// good for kittens to add / videosize
+					sortedRequests.add(
+							new RequestScoring(e, v, requestCount * input.getDcLatency(e) / input.getVideoSize(v)));
 				}
 			}
 		}
-		Collections.sort(sortedRequests, Comparator.comparing(RequestScoring::getScoring));
+		Collections.sort(sortedRequests, Collections.reverseOrder(Comparator.comparing(RequestScoring::getScoring)));
 
 		List<RequestScoring> requestsNotAllocated = new ArrayList<>();
 		for (RequestScoring req : sortedRequests) {
-			// for kittens very good not to allocate twice, but for videos very
-			// good to allocate twice
-			if (allocation.isAllocated(req.getVideo())) {
-				requestsNotAllocated.add(req);
-				continue;
-			}
+			// for kittens good not to allocate twice, but for
+			// videos good to allocate twice
+			 if (allocation.isAllocated(req.getVideo())) {
+			 requestsNotAllocated.add(req);
+			 continue;
+			 }
 
 			for (CacheLatency c : sortedLatencies.get(req.getEndpoint())) {
+				// if video was already allocated at a good cache -> break
+				if (allocation.isAllocated(req.getVideo(), c.getCache())) {
+					break;
+				}
+				// if we found a cache which can still allocate the video
+				// -> allocate&break
 				if (allocation.getUsedCapacity(c.getCache()) + input.getVideoSize(req.getVideo()) <= input.getX()) {
 					allocation.allocateTo(req.getVideo(), c.getCache());
 					break;
@@ -83,7 +103,10 @@ public class GreedySolverAC implements Solver {
 
 		for (RequestScoring req : requestsNotAllocated) {
 			for (CacheLatency c : sortedLatencies.get(req.getEndpoint())) {
-				if (!allocation.isAllocated(req.getVideo(), c.getCache()) && allocation.getUsedCapacity(c.getCache())
+				if (allocation.isAllocated(req.getVideo(), c.getCache())) {
+					break;
+				}
+				if (allocation.getUsedCapacity(c.getCache())
 						+ input.getVideoSize(req.getVideo()) <= input.getX()) {
 					allocation.allocateTo(req.getVideo(), c.getCache());
 					break;
