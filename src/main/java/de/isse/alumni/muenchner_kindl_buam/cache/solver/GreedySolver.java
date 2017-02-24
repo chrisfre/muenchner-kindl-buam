@@ -15,7 +15,8 @@ public class GreedySolver implements Solver {
 		private int cache;
 
 		public int getWeight(Input input) {
-			return (input.getDcLatency(endpoint) - input.getLatency(endpoint, cache)) * input.getRequestCount(endpoint, video);
+			return (input.getDcLatency(endpoint) - input.getLatency(endpoint, cache))
+					* input.getRequestCount(endpoint, video);
 		}
 	}
 
@@ -43,10 +44,10 @@ public class GreedySolver implements Solver {
 
 		int count = 0;
 		for (int e = 0; e < input.getE(); ++e) {
-			// if (!prep.isRelevantEndpoint(e)) {
-			// System.out.println("Skipping irrelevant endpoint: " + e);
-			// continue;
-			// }
+			if (!prep.isRelevantEndpoint(e)) {
+				System.out.println("Skipping irrelevant endpoint: " + e);
+				continue;
+			}
 
 			for (int c = 0; c < input.getC(); ++c) {
 				if (input.getLatency(e, c) == 0) {
@@ -54,10 +55,10 @@ public class GreedySolver implements Solver {
 				}
 
 				for (int v = 0; v < input.getV(); ++v) {
-					// if (!prep.isRelevantVideo(v)) {
-					// System.out.println("Skipping irrelevant video: " + v);
-					// continue;
-					// }
+					if (!prep.isRelevantVideo(v)) {
+						System.out.println("Skipping irrelevant video: " + v);
+						continue;
+					}
 
 					arrV[count] = v;
 					arrE[count] = e;
@@ -115,7 +116,7 @@ public class GreedySolver implements Solver {
 			// Find out if we can put the video on the requested cache
 			final boolean canAllocate = result.getUsedCapacity(crit.cache) + input.getVideoSize(crit.video) <= input
 					.getX();
-			if (canAllocate) {
+			if (canAllocate && !result.isAllocated(crit.video, crit.cache)) {
 
 				System.out.printf("Allocating video %d to cache %d (for EP %d)\n", crit.video, crit.cache,
 						crit.endpoint);
